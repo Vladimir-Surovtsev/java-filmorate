@@ -23,6 +23,7 @@ public class FilmController {
     private long generateId() {
         return ++id;
     }
+
     @GetMapping
     public List<Film> getAll() {
         return new ArrayList<>(films.values());
