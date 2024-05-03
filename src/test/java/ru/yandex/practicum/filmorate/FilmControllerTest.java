@@ -95,7 +95,7 @@ public class FilmControllerTest {
                 LocalDate.of(2008, 5, 31), 155);
 
         filmController.create(film1);
-        filmController. create(film2);
+        filmController.create(film2);
 
         final Film savedFilm1 = filmController.getAll().get(Math.toIntExact(film1.getId()) - 1);
         final Film savedFilm2 = filmController.getAll().get(Math.toIntExact(film2.getId()) - 1);

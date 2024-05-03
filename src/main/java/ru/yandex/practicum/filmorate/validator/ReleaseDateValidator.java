@@ -11,6 +11,6 @@ public class ReleaseDateValidator implements ConstraintValidator<ReleaseDateCons
         if (value == null) {
             return false;
         }
-        return value.isAfter(LocalDate.of(1895,12, 28));
+        return value.isAfter(LocalDate.of(1895, 12, 28));
     }
 }
