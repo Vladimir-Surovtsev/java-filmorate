@@ -50,7 +50,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
-					<argLine>-XX:+EnableDynamicAgentLoading</argLine>
+					<argLine>-Duser.language=en</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

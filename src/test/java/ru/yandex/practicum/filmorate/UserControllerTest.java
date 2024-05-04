@@ -39,7 +39,7 @@ public class UserControllerTest {
                 24));
 
         List<ConstraintViolation<User>> violations = new ArrayList<>(validator.validate(user));
-        ExpectedViolation expectedViolation = new ExpectedViolation("email", "не должно быть пустым");
+        ExpectedViolation expectedViolation = new ExpectedViolation("email", "must not be blank");
         assertEquals(expectedViolation.propertyPath, violations.getFirst().getPropertyPath().toString());
         assertEquals(expectedViolation.message, violations.getFirst().getMessage());
         assertEquals(1, violations.size());
@@ -52,7 +52,7 @@ public class UserControllerTest {
 
         List<ConstraintViolation<User>> violations = new ArrayList<>(validator.validate(user));
         ExpectedViolation expectedViolation = new ExpectedViolation("email",
-                "должно иметь формат адреса электронной почты");
+                "must be a well-formed email address");
         assertEquals(expectedViolation.propertyPath, violations.getFirst().getPropertyPath().toString());
         assertEquals(expectedViolation.message, violations.getFirst().getMessage());
         assertEquals(1, violations.size());
@@ -64,7 +64,7 @@ public class UserControllerTest {
                 5, 24));
 
         List<ConstraintViolation<User>> violations = new ArrayList<>(validator.validate(user));
-        ExpectedViolation expectedViolation = new ExpectedViolation("login", "не должно быть пустым");
+        ExpectedViolation expectedViolation = new ExpectedViolation("login", "must not be blank");
         assertEquals(expectedViolation.propertyPath, violations.getFirst().getPropertyPath().toString());
         assertEquals(expectedViolation.message, violations.getFirst().getMessage());
         assertEquals(1, violations.size());
@@ -88,7 +88,7 @@ public class UserControllerTest {
 
         List<ConstraintViolation<User>> violations = new ArrayList<>(validator.validate(user));
         ExpectedViolation expectedViolation = new ExpectedViolation("birthday",
-                "должно содержать прошедшую дату или сегодняшнее число");
+                "must be a date in the past or in the present");
         assertEquals(expectedViolation.propertyPath, violations.getFirst().getPropertyPath().toString());
         assertEquals(expectedViolation.message, violations.getFirst().getMessage());
         assertEquals(1, violations.size());
