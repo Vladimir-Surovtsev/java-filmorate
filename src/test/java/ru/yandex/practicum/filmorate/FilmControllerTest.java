@@ -14,15 +14,14 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class FilmControllerTest {
+class FilmControllerTest {
     static FilmController filmController = new FilmController();
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @AllArgsConstructor
     static class ExpectedViolation {
@@ -32,14 +31,24 @@ public class FilmControllerTest {
 
     @Test
     void validateFilm() {
-        generateDefaultFilm();
+        final Film film = Film.builder()
+                .name("Test film")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
+        filmController.create(film);
         validator.validate(filmController.getAll().getFirst());
     }
 
     @Test
     void validateFilmEmptyNameFail() {
-        final Film film = generateCustomFilm("", "Film description", LocalDate.of(2010, 4,
-                30), 400);
+        final Film film = Film.builder()
+                .name("")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
 
         List<ConstraintViolation<Film>> violations = new ArrayList<>(validator.validate(film));
         ExpectedViolation expectedViolation = new ExpectedViolation("name", "must not be blank");
@@ -50,8 +59,12 @@ public class FilmControllerTest {
 
     @Test
     void validateFilmTooLongDescriptionFail() {
-        final Film film = generateCustomFilm("Test film", "Film description".repeat(20),
-                LocalDate.of(2010, 5, 31), 155);
+        final Film film = Film.builder()
+                .name("Test film")
+                .description("Film description".repeat(22))
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
 
         List<ConstraintViolation<Film>> violations = new ArrayList<>(validator.validate(film));
         ExpectedViolation expectedViolation = new ExpectedViolation("description",
@@ -63,8 +76,12 @@ public class FilmControllerTest {
 
     @Test
     void validateFilmReleaseDateFail() {
-        final Film film = generateCustomFilm("Test film", "Film description",
-                LocalDate.of(1894, 1, 1), 150);
+        final Film film = Film.builder()
+                .name("Test film")
+                .description("Film description")
+                .releaseDate(LocalDate.of(1894, 5, 31))
+                .duration(155)
+                .build();
 
         List<ConstraintViolation<Film>> violations = new ArrayList<>(validator.validate(film));
         ExpectedViolation expectedViolation = new ExpectedViolation("releaseDate",
@@ -76,8 +93,12 @@ public class FilmControllerTest {
 
     @Test
     void validateFilmDurationFail() {
-        final Film film = generateCustomFilm("Test film", "Film description",
-                LocalDate.of(2008, 5, 31), -155);
+        final Film film = Film.builder()
+                .name("Test film")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(0)
+                .build();
 
         List<ConstraintViolation<Film>> violations = new ArrayList<>(validator.validate(film));
         ExpectedViolation expectedViolation = new ExpectedViolation("duration",
@@ -89,10 +110,18 @@ public class FilmControllerTest {
 
     @Test
     void createFilmTest() {
-        final Film film1 = generateCustomFilm("Test film 1", "Film description",
-                LocalDate.of(2008, 5, 31), 155);
-        final Film film2 = generateCustomFilm("Test film 2", "Film description",
-                LocalDate.of(2008, 5, 31), 155);
+        final Film film1 = Film.builder()
+                .name("Test film1")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
+        final Film film2 = Film.builder()
+                .name("Test film2")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
 
         filmController.create(film1);
         filmController.create(film2);
@@ -108,10 +137,18 @@ public class FilmControllerTest {
 
     @Test
     void updateFilmTest() {
-        final Film film1 = generateCustomFilm("Test film 1", "Film description",
-                LocalDate.of(2008, 5, 31), 135);
-        final Film film2 = generateCustomFilm("Test film 2", "Film description",
-                LocalDate.of(2000, 5, 1), 155);
+        final Film film1 = Film.builder()
+                .name("Test film1")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
+        final Film film2 = Film.builder()
+                .name("Test film2")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2011, 5, 31))
+                .duration(122)
+                .build();
 
         filmController.create(film1);
         film2.setId(film1.getId());
@@ -124,40 +161,23 @@ public class FilmControllerTest {
 
     @Test
     void validateIdNotSetForUpdateFail() {
-        final Film film1 = generateCustomFilm("Test film 1", "Film description",
-                LocalDate.of(2008, 5, 31), 135);
-        final Film film2 = generateCustomFilm("Test film 2", "Film description",
-                LocalDate.of(2000, 5, 1), 155);
+        final Film film1 = Film.builder()
+                .name("Test film1")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2008, 5, 31))
+                .duration(155)
+                .build();
+        final Film film2 = Film.builder()
+                .name("Test film2")
+                .description("Film description")
+                .releaseDate(LocalDate.of(2011, 5, 31))
+                .duration(122)
+                .build();
 
         filmController.create(film1);
 
         NotFoundException thrown = Assertions.assertThrows(NotFoundException.class,
                 () -> filmController.update(film2), "Ожидалось получение исключения");
         assertEquals("Фильм с id = 0 не найден", thrown.getMessage());
-    }
-
-    private void generateDefaultFilm() {
-        Stream.generate(() -> Film.builder()
-                        .id(0)
-                        .name("Test film")
-                        .description("Film description")
-                        .releaseDate(LocalDate.of(2008, 5, 31))
-                        .duration(155)
-                        .build())
-                .limit(1)
-                .forEach(filmController::create);
-    }
-
-    private Film generateCustomFilm(
-            String name,
-            String description,
-            LocalDate release,
-            int duration) {
-        return Film.builder()
-                .name(name)
-                .description(description)
-                .releaseDate(release)
-                .duration(duration)
-                .build();
     }
 }
