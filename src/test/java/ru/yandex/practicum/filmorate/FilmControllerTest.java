@@ -10,16 +10,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class FilmControllerTest {
-    static FilmController filmController = new FilmController();
+
+    UserStorage userStorage = new InMemoryUserStorage();
+    FilmStorage storage = new InMemoryFilmStorage(userStorage);
+    FilmService service = new FilmService(storage);
+    FilmController filmController = new FilmController(service);
 
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -38,7 +48,7 @@ class FilmControllerTest {
                 .duration(155)
                 .build();
         filmController.create(film);
-        validator.validate(filmController.getAll().getFirst());
+        validator.validate(filmController.findAll().getFirst());
     }
 
     @Test
@@ -126,9 +136,9 @@ class FilmControllerTest {
         filmController.create(film1);
         filmController.create(film2);
 
-        final Film savedFilm1 = filmController.getAll().get(Math.toIntExact(film1.getId()) - 1);
-        final Film savedFilm2 = filmController.getAll().get(Math.toIntExact(film2.getId()) - 1);
-        final List<Film> films = filmController.getAll();
+        final Film savedFilm1 = filmController.findAll().get(Math.toIntExact(film1.getId()) - 1);
+        final Film savedFilm2 = filmController.findAll().get(Math.toIntExact(film2.getId()) - 1);
+        final List<Film> films = filmController.findAll();
 
         assertNotNull(films, "Информация о фильмах не возвращается");
         assertEquals(film1, savedFilm1, "Информация о фильме не соответствует");
@@ -154,7 +164,7 @@ class FilmControllerTest {
         film2.setId(film1.getId());
         filmController.update(film2);
 
-        final Film updatedFilm = filmController.getAll().get(Math.toIntExact(film1.getId()) - 1);
+        final Film updatedFilm = filmController.findAll().get(Math.toIntExact(film1.getId()) - 1);
 
         assertEquals(film2, updatedFilm, "Информация о фильме не соответствует");
     }
@@ -180,4 +190,5 @@ class FilmControllerTest {
                 () -> filmController.update(film2), "Ожидалось получение исключения");
         assertEquals("Фильм с id = 0 не найден", thrown.getMessage());
     }
+
 }
