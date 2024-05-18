@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class FilmControllerTest {
 
     UserStorage userStorage = new InMemoryUserStorage();
-    FilmStorage storage = new InMemoryFilmStorage(userStorage);
-    FilmService service = new FilmService(storage);
+    FilmStorage storage = new InMemoryFilmStorage();
+    FilmService service = new FilmService(storage, userStorage);
     FilmController filmController = new FilmController(service);
 
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
