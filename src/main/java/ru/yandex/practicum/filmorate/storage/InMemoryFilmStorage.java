@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
-    private final UserStorage userStorage;
     private long id = 0;
 
     private long generateId() {
@@ -48,10 +47,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addLike(Long id, Long userId) {
-        if (!films.containsKey(id))
+        if (!films.containsKey(id)) {
             throw new NotFoundException("Фильм с id = " + id + " не найден");
-        if (!userStorage.checkUserExists(userId))
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        }
         films.get(id).addLike(userId);
         log.info("Пользователь с id = {} поставил лайк фильму c id = {}", userId, id);
         return films.get(id);
@@ -59,10 +57,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film deleteLike(Long id, Long userId) {
-        if (!films.containsKey(id))
+        if (!films.containsKey(id)) {
             throw new NotFoundException("Фильм с id = " + id + " не найден");
-        if (!userStorage.checkUserExists(userId))
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        }
         films.get(id).deleteLike(userId);
         log.info("Пользователь с id = {} удалил лайк фильму c id = {}", userId, id);
         return films.get(id);
@@ -70,7 +67,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopular(Long count) {
-        if (count <= 0) throw new ValidationException("Параметр count должен быть больше 0");
+        if (count <= 0) {
+            throw new ValidationException("Параметр count должен быть больше 0");
+        }
         log.info("Получение списка {} популярных фильмов", count);
         return films.values().stream()
                 .sorted(Comparator.comparingInt(Film::getLikesCount).reversed())

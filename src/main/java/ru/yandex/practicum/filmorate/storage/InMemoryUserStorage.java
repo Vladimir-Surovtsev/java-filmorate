@@ -52,12 +52,15 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addToFriends(Long id, Long friendId) {
-        if (!users.containsKey(id))
+        if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!users.containsKey(friendId))
+        }
+        if (!users.containsKey(friendId)) {
             throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
-        if (Objects.equals(id, friendId))
+        }
+        if (Objects.equals(id, friendId)) {
             throw new ValidationException("Нельзя добавить самого себя в друзья (id = " + id + ")");
+        }
         users.get(id).addFriend(friendId);
         users.get(friendId).addFriend(id);
         log.info("Пользователь с id = {} и пользователь с id = {} теперь друзья", friendId, id);
@@ -66,10 +69,12 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User deleteFromFriends(Long id, Long friendId) {
-        if (!users.containsKey(id))
+        if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!users.containsKey(friendId))
+        }
+        if (!users.containsKey(friendId)) {
             throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+        }
         users.get(id).deleteFriend(friendId);
         users.get(friendId).deleteFriend(id);
         log.info("Пользователь с id = {} и пользователь с id = {} больше не друзья", friendId, id);
@@ -78,8 +83,9 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> findAllFriends(Long id) {
-        if (!users.containsKey(id))
+        if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
+        }
         log.info("Поиск друзей пользователя с id = {}", id);
         return users.values().stream()
                 .filter(user -> users.get(id).getFriends().contains(user.getId()))
@@ -88,10 +94,12 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> findCommonFriends(Long id, Long otherId) {
-        if (!users.containsKey(id))
+        if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!users.containsKey(otherId))
+        }
+        if (!users.containsKey(otherId)) {
             throw new NotFoundException("Пользователь с id = " + otherId + " не найден");
+        }
         log.info("Поиск общих друзей пользователя с id = {} и пользователя с id = {}", id, otherId);
         Set<Long> commonFriendId = users.get(id).getFriends().stream()
                 .filter(friendId -> users.get(otherId).getFriends().contains(friendId))
@@ -105,7 +113,9 @@ public class InMemoryUserStorage implements UserStorage {
         if (user.getLogin().contains(" ")) {
             throw new ValidationException("Логин не может содержать пробелов");
         }
-        if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 
 }
