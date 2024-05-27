@@ -9,15 +9,22 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UserControllerTest {
-    static UserController userController = new UserController();
+
+    UserStorage storage = new InMemoryUserStorage();
+    UserService service = new UserService(storage);
+    UserController userController = new UserController(service);
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @AllArgsConstructor
@@ -29,13 +36,13 @@ class UserControllerTest {
     @Test
     void validateUser() {
         final User user = User.builder()
-                .email("user@yandex.ru")
+                .email("user@yandex.net")
                 .login("user")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
                 .build();
         userController.create(user);
-        validator.validate(userController.getAll().getFirst());
+        validator.validate(userController.findAll().getFirst());
     }
 
     @Test
@@ -90,7 +97,7 @@ class UserControllerTest {
     @Test
     void validateUserNameAsLoginTest() {
         final User user = User.builder()
-                .email("user@yandex.ru")
+                .email("user@yandex.by")
                 .login("user")
                 .name(null)
                 .birthday(LocalDate.of(1999, 5, 24))
@@ -127,7 +134,7 @@ class UserControllerTest {
                 .birthday(LocalDate.of(1999, 5, 24))
                 .build();
         final User user2 = User.builder()
-                .email("user@yandex.ru")
+                .email("user2@yandex.com")
                 .login("user2")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
@@ -136,9 +143,9 @@ class UserControllerTest {
         userController.create(user1);
         userController.create(user2);
 
-        final User savedUser1 = userController.getAll().get(Math.toIntExact(user1.getId()) - 1);
-        final User savedUser2 = userController.getAll().get(Math.toIntExact(user2.getId()) - 1);
-        final List<User> users = userController.getAll();
+        final User savedUser1 = userController.findAll().get(Math.toIntExact(user1.getId()) - 1);
+        final User savedUser2 = userController.findAll().get(Math.toIntExact(user2.getId()) - 1);
+        final List<User> users = userController.findAll();
 
         assertNotNull(users, "Информация о пользователях не возвращается");
         assertEquals(user1, savedUser1, "Информация о пользователе не соответствует");
@@ -149,12 +156,12 @@ class UserControllerTest {
     void updateUserTest() {
         final User user1 = User.builder()
                 .email("user@yandex.ru")
-                .login("user1")
+                .login("user")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
                 .build();
         final User user2 = User.builder()
-                .email("user@yandex.ru")
+                .email("user2@yandex.ru")
                 .login("user2")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
@@ -164,7 +171,7 @@ class UserControllerTest {
         user2.setId(user1.getId());
         userController.update(user2);
 
-        final User updatedUser = userController.getAll().get(Math.toIntExact(user1.getId()) - 1);
+        final User updatedUser = userController.findAll().get(Math.toIntExact(user1.getId()) - 1);
 
         assertEquals(user2, updatedUser, "Информация о пользователе не соответствует");
     }
@@ -172,13 +179,13 @@ class UserControllerTest {
     @Test
     void validateIdNotSetForUpdateFail() {
         final User user1 = User.builder()
-                .email("user@yandex.ru")
+                .email("user1@yandex.ru")
                 .login("user1")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
                 .build();
         final User user2 = User.builder()
-                .email("user@yandex.ru")
+                .email("user2@yandex.ru")
                 .login("user2")
                 .name("User Name")
                 .birthday(LocalDate.of(1999, 5, 24))
@@ -190,4 +197,5 @@ class UserControllerTest {
                 () -> userController.update(user2), "Ожидалось получение исключения");
         assertEquals("Пользователь с id = 0 не найден", thrown.getMessage());
     }
+
 }
