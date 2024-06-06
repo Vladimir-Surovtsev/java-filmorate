@@ -2,48 +2,41 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 import java.util.List;
-
 
 @RequiredArgsConstructor
 @Service
 public class FilmService {
-    private final FilmStorage storage;
-    private final UserStorage userStorage;
+    private final FilmRepository repository;
 
     public List<Film> findAll() {
-        return storage.findAll();
+        return repository.findAll();
     }
 
     public Film create(Film film) {
-        return storage.create(film);
+        return repository.create(film);
     }
 
     public Film update(Film newFilm) {
-        return storage.update(newFilm);
+        return repository.update(newFilm);
     }
 
-    public Film addLike(Long id, Long userId) {
-        if (!userStorage.checkUserExists(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
-        }
-        return storage.addLike(id, userId);
+    public Film addLike(long id, long userId) {
+        return repository.addLike(id, userId);
     }
 
-    public Film deleteLike(Long id, Long userId) {
-        if (!userStorage.checkUserExists(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
-        }
-        return storage.deleteLike(id, userId);
+    public Film deleteLike(long id, long userId) {
+        return repository.deleteLike(id, userId);
     }
 
-    public List<Film> getPopular(Long count) {
-        return storage.getPopular(count);
+    public List<Film> getPopular(long count) {
+        return repository.getPopular(count);
     }
 
+    public Film findById(long id) {
+        return repository.findById(id);
+    }
 }

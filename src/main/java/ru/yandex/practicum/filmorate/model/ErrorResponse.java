@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.Getter;
 
@@ -9,5 +9,4 @@ public class ErrorResponse {
     public ErrorResponse(String description) {
         this.description = description;
     }
-
 }

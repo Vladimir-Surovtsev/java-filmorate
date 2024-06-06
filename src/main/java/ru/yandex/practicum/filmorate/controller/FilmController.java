@@ -20,6 +20,7 @@ public class FilmController {
         return service.findAll();
     }
 
+
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         return service.create(film);
@@ -30,22 +31,26 @@ public class FilmController {
         return service.update(newFilm);
     }
 
+    @GetMapping("/{id}")
+    public Film findById(@PathVariable long id) {
+        return service.findById(id);
+    }
+
     @PutMapping("/{id}/like/{userId}")
-    public Film addLike(@PathVariable Long id,
-                        @PathVariable Long userId) {
+    public Film addLike(@PathVariable long id,
+                        @PathVariable long userId) {
         return service.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable Long id,
-                           @PathVariable Long userId) {
+    public Film deleteLike(@PathVariable long id,
+                           @PathVariable long userId) {
         return service.deleteLike(id, userId);
     }
 
     @GetMapping("/popular")
     public List<Film> getPopular(
-            @RequestParam(defaultValue = "10") Long count) {
+            @RequestParam(defaultValue = "10") long count) {
         return service.getPopular(count);
     }
-
 }

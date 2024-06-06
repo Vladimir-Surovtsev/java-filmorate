@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Film {
-    private long id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -30,22 +32,33 @@ public class Film {
     @ReleaseDateConstraint
     private LocalDate releaseDate;
 
-    @Positive
-    private int duration;
+    @NotNull
+    private long duration;
 
     @Builder.Default
     private Set<Long> likes = new HashSet<>();
 
-    public void addLike(Long id) {
+    @NotNull
+    private Mpa mpa;
+
+    @Builder.Default
+    private Set<Genre> genres = new HashSet<>();
+
+    @JsonProperty("duration")
+    @Positive
+    public long getDuration() {
+        return duration;
+    }
+
+    public void addLike(long id) {
         likes.add(id);
     }
 
-    public void deleteLike(Long id) {
+    public void deleteLike(long id) {
         likes.remove(id);
     }
 
     public int getLikesCount() {
         return likes.size();
     }
-
 }
