@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Component
 @Primary
-public class JdbsMpaRepository extends JdbsBaseRepository<Mpa> implements MpaRepository {
+public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRepository {
     private static final String MPA_FIND_ALL_QUERY = """
             SELECT *
             FROM "mpas";
@@ -24,7 +24,7 @@ public class JdbsMpaRepository extends JdbsBaseRepository<Mpa> implements MpaRep
             WHERE "mpa_id" = ?;
             """;
 
-    public JdbsMpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
+    public JdbcMpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 

@@ -15,7 +15,7 @@ import java.util.Set;
 @Slf4j
 @Component
 @Primary
-public class JdbsGenreRepository extends JdbsBaseRepository<Genre> implements GenreRepository {
+public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements GenreRepository {
     private static final String GENRES_FIND_ALL_QUERY = """
             SELECT *
             FROM "genres";
@@ -26,7 +26,7 @@ public class JdbsGenreRepository extends JdbsBaseRepository<Genre> implements Ge
             WHERE "genre_id" = ?;
             """;
 
-    public JdbsGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
+    public JdbcGenreRepository(JdbcTemplate jdbc, RowMapper<Genre> mapper) {
         super(jdbc, mapper);
     }
 

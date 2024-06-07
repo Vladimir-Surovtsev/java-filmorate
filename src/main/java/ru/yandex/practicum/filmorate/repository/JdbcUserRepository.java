@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @Component
 @Primary
-public class JdbsUserRepository extends JdbsBaseRepository<User> implements UserRepository {
+public class JdbcUserRepository extends JdbcBaseRepository<User> implements UserRepository {
     private static final int USERS_FRIENDSHIP_STATUS_CONFIRMED = 1;
     private static final int USERS_FRIENDSHIP_STATUS_UNCONFIRMED = 2;
     private static final String USERS_FIND_ALL_QUERY = """
@@ -76,7 +76,7 @@ public class JdbsUserRepository extends JdbsBaseRepository<User> implements User
             WHERE "user_id" = ?;
             """;
 
-    public JdbsUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
+    public JdbcUserRepository(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
     }
 

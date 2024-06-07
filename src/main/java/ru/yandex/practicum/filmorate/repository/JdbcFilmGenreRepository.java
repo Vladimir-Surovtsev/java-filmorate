@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @Component
 @Primary
-public class JdbsFilmGenreRepository extends JdbsBaseRepository<FilmGenre> implements FilmGenreRepository {
+public class JdbcFilmGenreRepository extends JdbcBaseRepository<FilmGenre> implements FilmGenreRepository {
     private static final String GENRES_FIND_BY_FILM_ID_QUERY = """
             SELECT fg."film_id", g."genre_id", g."genre"
             FROM "films_genre" AS fg
@@ -20,7 +20,7 @@ public class JdbsFilmGenreRepository extends JdbsBaseRepository<FilmGenre> imple
             WHERE "film_id" IN (%s);
             """;
 
-    public JdbsFilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
+    public JdbcFilmGenreRepository(JdbcTemplate jdbc, RowMapper<FilmGenre> mapper) {
         super(jdbc, mapper);
     }
 

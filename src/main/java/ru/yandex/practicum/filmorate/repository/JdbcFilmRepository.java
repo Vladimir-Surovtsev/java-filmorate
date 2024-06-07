@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @Primary
-public class JdbsFilmRepository extends JdbsBaseRepository<Film> implements FilmRepository {
+public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements FilmRepository {
     private final UserRepository userRepository;
     private final GenreRepository genreRepository;
     private final MpaRepository mpaRepository;
@@ -86,7 +86,7 @@ public class JdbsFilmRepository extends JdbsBaseRepository<Film> implements Film
                 VALUES (?, ?);
             """;
 
-    public JdbsFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, UserRepository userRepository,
+    public JdbcFilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper, UserRepository userRepository,
                               GenreRepository genreRepository, MpaRepository mpaRepository,
                               FilmLikeRepository likeRepository, FilmGenreRepository filmGenreRepository) {
         super(jdbc, mapper);

@@ -12,14 +12,14 @@ import java.util.List;
 @Slf4j
 @Component
 @Primary
-public class JdbsFilmLikeRepository extends JdbsBaseRepository<FilmLike> implements FilmLikeRepository {
+public class JdbcFilmLikeRepository extends JdbcBaseRepository<FilmLike> implements FilmLikeRepository {
     private static final String LIKES_FIND_BY_FILM_ID_QUERY = """
             SELECT *
             FROM "likes"
             WHERE "film_id" IN (%s);
             """;
 
-    public JdbsFilmLikeRepository(JdbcTemplate jdbc, RowMapper<FilmLike> mapper) {
+    public JdbcFilmLikeRepository(JdbcTemplate jdbc, RowMapper<FilmLike> mapper) {
         super(jdbc, mapper);
     }
 

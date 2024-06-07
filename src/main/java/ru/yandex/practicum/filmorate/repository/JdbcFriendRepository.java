@@ -12,14 +12,14 @@ import java.util.List;
 @Slf4j
 @Component
 @Primary
-public class JdbsFriendRepository extends JdbsBaseRepository<Friend> implements FriendRepository {
+public class JdbcFriendRepository extends JdbcBaseRepository<Friend> implements FriendRepository {
     private static final String FRIENDS_FIND_BY_USER_ID_QUERY = """
             SELECT *
             FROM "friends"
             WHERE "user_id" = ?;
             """;
 
-    public JdbsFriendRepository(JdbcTemplate jdbc, RowMapper<Friend> mapper) {
+    public JdbcFriendRepository(JdbcTemplate jdbc, RowMapper<Friend> mapper) {
         super(jdbc, mapper);
     }
 
