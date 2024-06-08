@@ -13,7 +13,7 @@ public interface UserRepository {
 
     User addToFriends(long id, long friendId);
 
-    User deleteFromFriends(long id, long friendId);
+    void deleteFromFriends(long id, long friendId);
 
     List<User> findAllFriends(long id);
 

@@ -29,8 +29,8 @@ public class UserService {
         return repository.addToFriends(id, friendId);
     }
 
-    public User deleteFromFriends(long id, long friendId) {
-        return repository.deleteFromFriends(id, friendId);
+    public void deleteFromFriends(long id, long friendId) {
+        repository.deleteFromFriends(id, friendId);
     }
 
     public List<User> findAllFriends(long id) {

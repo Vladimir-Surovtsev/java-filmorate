@@ -173,10 +173,12 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     @Override
     public Film addLike(long id, long userId) {
-        if (!checkFilmExists(id))
+        if (!checkFilmExists(id)) {
             throw new NotFoundException("Фильм с id = " + id + " не найден");
-        if (!userRepository.checkUserExists(userId))
+        }
+        if (!userRepository.checkUserExists(userId)) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        }
         Film film = findOne(
                 FILMS_FIND_BY_ID_QUERY,
                 id
@@ -193,10 +195,13 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     @Override
     public Film deleteLike(long id, long userId) {
-        if (!checkFilmExists(id))
+        if (!checkFilmExists(id)) {
             throw new NotFoundException("Фильм с id = " + id + " не найден");
-        if (!userRepository.checkUserExists(userId))
+        }
+        if (!userRepository.checkUserExists(userId)) {
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        }
+
         Film film = findOne(
                 FILMS_FIND_BY_ID_QUERY,
                 id
@@ -213,7 +218,9 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     @Override
     public List<Film> getPopular(long count) {
-        if (count < 0) throw new ValidationException("Параметр count должен быть больше 0");
+        if (count < 0) {
+            throw new ValidationException("Параметр count должен быть больше 0");
+        }
         log.info("Получение списка {} популярных фильмов", count);
         return findMany(
                 FILMS_GET_POPULAR_QUERY,

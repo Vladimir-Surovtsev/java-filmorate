@@ -45,17 +45,12 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
         ).orElseThrow(() -> new NotFoundException("Жанр с id = " + id + " не найден!"));
     }
 
-    public boolean checkGenresExists(Set<Genre> genres) {
+    public void checkGenresExists(Set<Genre> genres) {
+        List<Genre> existsGenres = findAll();
         for (Genre genre : genres) {
-            if (!checkGenreExists(genre.getId()))
+            if (!existsGenres.contains(genre)) {
                 throw new ParameterNotValidException("Жанр с id = " + genre.getId(), " не найден!");
+            }
         }
-        return true;
-    }
-
-    public boolean checkGenreExists(int id) {
-        return findOne(
-                GENRES_FIND_BY_ID_QUERY,
-                id).isPresent();
     }
 }

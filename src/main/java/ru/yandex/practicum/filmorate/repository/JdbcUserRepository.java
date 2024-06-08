@@ -119,12 +119,15 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
 
     @Override
     public User addToFriends(long id, long friendId) {
-        if (!checkUserExists(id))
+        if (!checkUserExists(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!checkUserExists(friendId))
+        }
+        if (!checkUserExists(friendId)) {
             throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
-        if (id == friendId)
+        }
+        if (id == friendId) {
             throw new ValidationException("Нельзя добавить самого себя в друзья (id = " + id + ")");
+        }
         User user = findOne(
                 USERS_FIND_BY_ID_QUERY,
                 id
@@ -141,24 +144,26 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
     }
 
     @Override
-    public User deleteFromFriends(long id, long friendId) {
-        if (!checkUserExists(id))
+    public void deleteFromFriends(long id, long friendId) {
+        if (!checkUserExists(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!checkUserExists(friendId))
+        }
+        if (!checkUserExists(friendId)) {
             throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+        }
         delete(
                 USERS_DELETE_FROM_FRIENDS_QUERY,
                 id,
                 friendId
         );
         log.info("Пользователь с id = {} и пользователь с id = {} больше не друзья", friendId, id);
-        return null;
     }
 
     @Override
     public List<User> findAllFriends(long id) {
-        if (!checkUserExists(id))
+        if (!checkUserExists(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
+        }
         log.info("Поиск друзей пользователя с id = {}", id);
         return findMany(
                 USERS_FIND_ALL_FRIENDS_QUERY,
@@ -168,10 +173,12 @@ public class JdbcUserRepository extends JdbcBaseRepository<User> implements User
 
     @Override
     public List<User> findCommonFriends(long id, long otherId) {
-        if (!checkUserExists(id))
+        if (!checkUserExists(id)) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
-        if (!checkUserExists(otherId))
+        }
+        if (!checkUserExists(otherId)) {
             throw new NotFoundException("Пользователь с id = " + otherId + " не найден");
+        }
         log.info("Поиск общих друзей пользователя с id = {} и пользователя с id = {}", id, otherId);
         return findMany(
                 USERS_FIND_COMMON_FRIENDS_QUERY,

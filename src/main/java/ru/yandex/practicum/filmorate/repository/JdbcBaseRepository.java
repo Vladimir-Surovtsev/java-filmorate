@@ -63,9 +63,8 @@ public class JdbcBaseRepository<T> {
 
         if (id != null) {
             return id;
-        } else {
-            throw new InternalServerException("Не удалось сохранить данные");
         }
+        throw new InternalServerException("Не удалось сохранить данные");
     }
 
     protected void insert(String query, Object... params) {

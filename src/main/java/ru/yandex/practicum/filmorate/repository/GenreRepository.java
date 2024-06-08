@@ -10,7 +10,5 @@ public interface GenreRepository {
 
     Genre findById(int id);
 
-    boolean checkGenresExists(Set<Genre> genres);
-
-    boolean checkGenreExists(int id);
+    void checkGenresExists(Set<Genre> genres);
 }
