@@ -6,14 +6,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ParameterNotValidException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.model.FilmLike;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -238,7 +237,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String filmsId = films.stream()
                 .map(film -> film.getId().toString())
                 .collect(Collectors.joining(", "));
-        List<FilmGenre> filmGenres = filmGenreRepository.findGenresOfFilms(filmsId);
+        LinkedHashSet<FilmGenre> filmGenres = filmGenreRepository.findGenresOfFilms(filmsId);
         for (Film film : films) {
             film.setGenres(filmGenres.stream()
                     .filter(filmGenre -> film.getId() == filmGenre.getFilmId())
@@ -265,9 +264,6 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
 
     private void validate(Film film) {
         genreRepository.checkGenresExists(film.getGenres());
-        film.setGenres(new HashSet<>(film.getGenres()));
-        if (!mpaRepository.checkMpaExists(film.getMpa().getId())) {
-            throw new ParameterNotValidException(String.valueOf(film.getMpa().getId()), " <--Нет такого id");
-        }
+        mpaRepository.checkMpaExists(film.getMpa().getId());
     }
 }

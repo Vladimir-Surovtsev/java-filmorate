@@ -9,5 +9,5 @@ public interface MpaRepository {
 
     Mpa findById(int id);
 
-    boolean checkMpaExists(int id);
+    void checkMpaExists(int id);
 }

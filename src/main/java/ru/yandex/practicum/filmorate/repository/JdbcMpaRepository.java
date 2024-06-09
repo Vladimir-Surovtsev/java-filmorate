@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ParameterNotValidException;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
@@ -43,9 +44,11 @@ public class JdbcMpaRepository extends JdbcBaseRepository<Mpa> implements MpaRep
         ).orElseThrow(() -> new NotFoundException("Рейтинг MPA с id = " + id + " не найден!"));
     }
 
-    public boolean checkMpaExists(int id) {
-        return findOne(
+    public void checkMpaExists(int id) {
+        if (findOne(
                 MPA_FIND_BY_ID_QUERY,
-                id).isPresent();
+                id).isEmpty()) {
+            throw new ParameterNotValidException(String.valueOf(id), " <--Нет такого id MPA");
+        }
     }
 }

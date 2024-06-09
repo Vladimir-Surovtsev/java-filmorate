@@ -116,6 +116,7 @@ class JdbcFilmRepositoryTest {
         jdbcFilmRepository.create(film2);
 
         List<Film> responseEntity = jdbcFilmRepository.findAll();
+        System.out.println(responseEntity.toString());
         assertNotNull(responseEntity);
         assertEquals(2, responseEntity.size());
     }

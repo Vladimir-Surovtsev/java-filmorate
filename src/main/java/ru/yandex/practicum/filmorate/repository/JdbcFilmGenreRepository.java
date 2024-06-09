@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 
 @Slf4j
 @Component
@@ -25,9 +25,9 @@ public class JdbcFilmGenreRepository extends JdbcBaseRepository<FilmGenre> imple
     }
 
     @Override
-    public List<FilmGenre> findGenresOfFilms(String filmsId) {
-        return findMany(
+    public LinkedHashSet<FilmGenre> findGenresOfFilms(String filmsId) {
+        return new LinkedHashSet<>(findMany(
                 String.format(GENRES_FIND_BY_FILM_ID_QUERY, filmsId)
-        );
+        ));
     }
 }
