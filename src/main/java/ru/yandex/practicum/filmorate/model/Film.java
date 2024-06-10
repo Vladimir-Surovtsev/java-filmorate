@@ -9,9 +9,7 @@ import lombok.*;
 import ru.yandex.practicum.filmorate.validator.ReleaseDateConstraint;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Builder
@@ -60,5 +58,9 @@ public class Film {
 
     public int getLikesCount() {
         return likes.size();
+    }
+
+    public List<Genre> getGenres() {
+        return new ArrayList<>(genres).reversed();
     }
 }

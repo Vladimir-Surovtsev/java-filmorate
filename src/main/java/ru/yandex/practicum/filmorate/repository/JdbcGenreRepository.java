@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.exception.ParameterNotValidException;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -45,7 +44,7 @@ public class JdbcGenreRepository extends JdbcBaseRepository<Genre> implements Ge
         ).orElseThrow(() -> new NotFoundException("Жанр с id = " + id + " не найден!"));
     }
 
-    public void checkGenresExists(Set<Genre> genres) {
+    public void checkGenresExists(List<Genre> genres) {
         List<Genre> existsGenres = findAll();
         for (Genre genre : genres) {
             if (!existsGenres.contains(genre)) {

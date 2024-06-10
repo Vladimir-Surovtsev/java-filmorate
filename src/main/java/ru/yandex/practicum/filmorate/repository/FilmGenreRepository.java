@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.repository;
 
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 
-import java.util.LinkedHashSet;
+import java.util.List;
 
 public interface FilmGenreRepository {
-    LinkedHashSet<FilmGenre> findGenresOfFilms(String filmsId);
+    List<FilmGenre> findGenresOfFilms(String filmsId);
 }

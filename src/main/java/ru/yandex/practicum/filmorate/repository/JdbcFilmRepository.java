@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.model.FilmLike;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,6 +135,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                     genre.getId()
             );
         }
+        setFilmsGenres(List.of(film));
+        film.setMpa(mpaRepository.findById(film.getMpa().getId()));
         log.info("Фильм {} добавлен в список с id = {}", film.getName(), film.getId());
         return film;
     }
@@ -164,6 +165,8 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                         genre.getId()
                 );
             }
+            setFilmsGenres(List.of(film));
+            film.setMpa(mpaRepository.findById(film.getMpa().getId()));
             log.info("Фильм с id = {} обновлен", film.getId());
             return film;
         }
@@ -237,9 +240,9 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
         String filmsId = films.stream()
                 .map(film -> film.getId().toString())
                 .collect(Collectors.joining(", "));
-        LinkedHashSet<FilmGenre> filmGenres = filmGenreRepository.findGenresOfFilms(filmsId);
+        List<FilmGenre> filmGenres = filmGenreRepository.findGenresOfFilms(filmsId);
         for (Film film : films) {
-            film.setGenres(filmGenres.stream()
+            film.setGenres(filmGenres.reversed().stream()
                     .filter(filmGenre -> film.getId() == filmGenre.getFilmId())
                     .map(filmGenre -> new Genre(
                             filmGenre.getGenreId(),
