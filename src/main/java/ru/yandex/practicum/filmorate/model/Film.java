@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.validator.ReleaseDateConstraint;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -61,6 +62,8 @@ public class Film {
     }
 
     public List<Genre> getGenres() {
-        return new ArrayList<>(genres).reversed();
+        return genres.stream()
+                .sorted(Comparator.comparing(Genre::getId))
+                .collect(Collectors.toList());
     }
 }

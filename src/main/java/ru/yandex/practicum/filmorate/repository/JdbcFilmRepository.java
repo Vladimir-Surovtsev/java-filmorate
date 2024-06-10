@@ -242,7 +242,7 @@ public class JdbcFilmRepository extends JdbcBaseRepository<Film> implements Film
                 .collect(Collectors.joining(", "));
         List<FilmGenre> filmGenres = filmGenreRepository.findGenresOfFilms(filmsId);
         for (Film film : films) {
-            film.setGenres(filmGenres.reversed().stream()
+            film.setGenres(filmGenres.stream()
                     .filter(filmGenre -> film.getId() == filmGenre.getFilmId())
                     .map(filmGenre -> new Genre(
                             filmGenre.getGenreId(),
