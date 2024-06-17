@@ -1,24 +1,25 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.yandex.practicum.filmorate.validator.ReleaseDateConstraint;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
+@EqualsAndHashCode(of = "id")
 public class Film {
-    private long id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -30,17 +31,29 @@ public class Film {
     @ReleaseDateConstraint
     private LocalDate releaseDate;
 
-    @Positive
-    private int duration;
+    @NotNull
+    private long duration;
 
     @Builder.Default
     private Set<Long> likes = new HashSet<>();
 
-    public void addLike(Long id) {
+    @NotNull
+    private Mpa mpa;
+
+    @Builder.Default
+    private Set<Genre> genres = new LinkedHashSet<>();
+
+    @JsonProperty("duration")
+    @Positive
+    public long getDuration() {
+        return duration;
+    }
+
+    public void addLike(long id) {
         likes.add(id);
     }
 
-    public void deleteLike(Long id) {
+    public void deleteLike(long id) {
         likes.remove(id);
     }
 
@@ -48,4 +61,9 @@ public class Film {
         return likes.size();
     }
 
+    public List<Genre> getGenres() {
+        return genres.stream()
+                .sorted(Comparator.comparing(Genre::getId))
+                .collect(Collectors.toList());
+    }
 }
